@@ -2,7 +2,7 @@
  * Footer — single-page anchor links
  * ============================================ */
 
-import { Github, Linkedin, Twitter, Mail, Heart, Code2 } from 'lucide-react';
+import { Github, Linkedin, Twitter, Mail, Heart } from 'lucide-react';
 import { NAV_LINKS, SOCIAL_LINKS } from '@/constants';
 import { scrollToSection } from '@/utils/scrollToSection';
 
@@ -27,7 +27,7 @@ export function Footer() {
               className="flex items-center gap-2"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-emerald-600">
-                <Code2 className="h-4 w-4 text-white" />
+                <span className="text-base font-bold leading-none text-white">D</span>
               </div>
               <span className="text-lg font-bold text-zinc-900 dark:text-white">
                 Dev<span className="text-teal-600 dark:text-teal-400">Mehta</span>

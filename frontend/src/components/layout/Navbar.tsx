@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Code2 } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { NAV_LINKS, SECTION_IDS } from '@/constants';
 import { ThemeToggle } from '@/components/ui';
 import { slideInRight } from '@/components/animations/variants';
@@ -55,7 +55,7 @@ export function Navbar() {
             transition={{ duration: 0.5 }}
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-emerald-600 shadow-lg shadow-teal-500/25"
           >
-            <Code2 className="h-5 w-5 text-white" />
+            <span className="text-lg font-bold leading-none text-white">D</span>
           </motion.div>
           <span className="text-lg font-bold text-zinc-900 dark:text-white">
             Dev<span className="text-teal-600 dark:text-teal-400">Mehta</span>
