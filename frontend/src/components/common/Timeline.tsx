@@ -66,10 +66,16 @@ export function TimelineItem({ experience, index, isLast }: TimelineItemProps) {
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                 {experience.role}
               </h3>
-              <p className="text-sm font-medium text-indigo-500">
+              <p className="text-sm font-medium text-teal-600 dark:text-teal-400">
                 {experience.company}
+                {experience.location && (
+                  <span className="font-normal text-zinc-500 dark:text-zinc-400">
+                    {' '}
+                    · {experience.location}
+                  </span>
+                )}
               </p>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
                 {experience.duration}
               </p>
             </div>

@@ -1,5 +1,5 @@
 /* ============================================
- * Contact form with validation and toast
+ * Contact form — sends to mehtadevv351@gmail.com via Web3Forms
  * ============================================ */
 
 import { useState, type FormEvent } from 'react';
@@ -8,6 +8,7 @@ import { Send, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button, Input, Textarea, GlassCard } from '@/components/ui';
 import { isValidEmail } from '@/utils';
+import { sendContactEmail } from '@/services/contactService';
 import type { ContactFormValues } from '@/types';
 
 export function ContactForm() {
@@ -39,13 +40,14 @@ export function ContactForm() {
 
     setIsSubmitting(true);
     try {
-      // Mock API call — replace with contactApi.send(form)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await sendContactEmail(form);
       setSubmitted(true);
-      toast.success('Message sent successfully! I will get back to you soon.');
+      toast.success('Message sent! I will reply to your email soon.');
       setForm({ name: '', email: '', message: '' });
-    } catch {
-      toast.error('Something went wrong. Please try again.');
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -66,10 +68,10 @@ export function ContactForm() {
           className="flex flex-col items-center py-8 text-center"
         >
           <CheckCircle className="h-16 w-16 text-green-500" />
-          <h3 className="mt-4 text-xl font-bold text-slate-900 dark:text-white">
+          <h3 className="mt-4 text-xl font-bold text-zinc-900 dark:text-white">
             Thank You!
           </h3>
-          <p className="mt-2 text-slate-500 dark:text-slate-400">
+          <p className="mt-2 text-zinc-500 dark:text-zinc-400">
             Your message has been sent. I will respond within 24 hours.
           </p>
           <Button
@@ -85,16 +87,16 @@ export function ContactForm() {
           <Input
             id="name"
             label="Name"
-            placeholder="John Doe"
+            placeholder="Your name"
             value={form.name}
             onChange={(e) => handleChange('name', e.target.value)}
             error={errors.name}
           />
           <Input
             id="email"
-            label="Email"
+            label="Your Email"
             type="email"
-            placeholder="john@example.com"
+            placeholder="you@example.com"
             value={form.email}
             onChange={(e) => handleChange('email', e.target.value)}
             error={errors.email}

@@ -11,6 +11,8 @@ interface SectionWrapperProps {
   id?: string;
   title?: string;
   subtitle?: string;
+  /** Last word highlighted with accent gradient */
+  accentWord?: string;
   children: ReactNode;
   className?: string;
   fullWidth?: boolean;
@@ -20,6 +22,7 @@ export function SectionWrapper({
   id,
   title,
   subtitle,
+  accentWord,
   children,
   className,
   fullWidth = false,
@@ -31,7 +34,8 @@ export function SectionWrapper({
     <section
       id={id}
       className={cn(
-        'relative py-20 md:py-28',
+        'relative scroll-mt-24 py-20 md:scroll-mt-28 md:py-28',
+        id && 'min-h-[50vh]',
         !fullWidth && 'mx-auto max-w-7xl px-6',
         className,
       )}
@@ -45,17 +49,22 @@ export function SectionWrapper({
               transition={{ duration: 0.6, ease: 'easeOut' }}
               className="text-3xl font-bold text-slate-900 dark:text-white md:text-4xl lg:text-5xl"
             >
-              {title.split(' ').map((word, i) => (
-                <span key={i}>
-                  {i === title.split(' ').length - 1 ? (
-                    <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
-                      {word}
-                    </span>
-                  ) : (
-                    word + ' '
-                  )}
-                </span>
-              ))}
+              {title.split(' ').map((word, i) => {
+                const highlight =
+                  accentWord?.toLowerCase() === word.toLowerCase() ||
+                  (!accentWord && i === title.split(' ').length - 1);
+                return (
+                  <span key={i}>
+                    {highlight ? (
+                      <span className="bg-gradient-to-r from-teal-600 via-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+                        {word}
+                      </span>
+                    ) : (
+                      word + ' '
+                    )}
+                  </span>
+                );
+              })}
             </motion.h2>
           )}
           {subtitle && (
@@ -73,7 +82,7 @@ export function SectionWrapper({
             initial={{ scaleX: 0 }}
             animate={isInView ? { scaleX: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-            className="mx-auto mt-6 h-1 w-20 origin-center rounded-full bg-gradient-to-r from-indigo-500 to-purple-600"
+            className="mx-auto mt-6 h-1 w-24 origin-center rounded-full bg-gradient-to-r from-teal-600 via-emerald-500 to-cyan-500"
           />
         </div>
       )}

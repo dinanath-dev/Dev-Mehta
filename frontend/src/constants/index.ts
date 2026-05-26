@@ -4,14 +4,28 @@
 
 import type { NavLink, SocialLink } from '@/types';
 
-/** Navigation links */
+/** Single-page section anchors */
+export const SECTION_IDS = [
+  'home',
+  'about',
+  'services',
+  'projects',
+  'experience',
+  'education',
+  'contact',
+] as const;
+
+export type SectionId = (typeof SECTION_IDS)[number];
+
+/** Navigation links — hash anchors for one-page scroll */
 export const NAV_LINKS: NavLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Experience', href: '/experience' },
-  { label: 'Skills', href: '/skills' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Home', href: '#home' },
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#services' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Education', href: '#education' },
+  { label: 'Contact', href: '#contact' },
 ];
 
 /** Social links */
@@ -23,7 +37,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     icon: 'Linkedin',
   },
   { name: 'Twitter', url: 'https://twitter.com/devmehta', icon: 'Twitter' },
-  { name: 'Email', url: 'mailto:dev@mehta.com', icon: 'Mail' },
+  { name: 'Email', url: 'mailto:mehtadevv351@gmail.com', icon: 'Mail' },
 ];
 
 /** Theme colors */

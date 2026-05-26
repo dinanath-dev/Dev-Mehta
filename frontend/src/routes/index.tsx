@@ -1,22 +1,15 @@
 /* ============================================
- * Application routes — lazy loaded pages
+ * Routes — single-page portfolio
  * ============================================ */
 
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { RootLayout } from '@/components/layout';
+import { ScrollToSectionRedirect } from '@/components/routing/ScrollToSectionRedirect';
 import { LoadingSpinner } from '@/components/ui';
 
-/* Lazy load all pages for code splitting */
-const HomePage = lazy(() => import('@/pages/HomePage'));
-const AboutPage = lazy(() => import('@/pages/AboutPage'));
-const ProjectsPage = lazy(() => import('@/pages/ProjectsPage'));
-const ExperiencePage = lazy(() => import('@/pages/ExperiencePage'));
-const SkillsPage = lazy(() => import('@/pages/SkillsPage'));
-const ContactPage = lazy(() => import('@/pages/ContactPage'));
-const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const LandingPage = lazy(() => import('@/pages/LandingPage'));
 
-/** Suspense fallback */
 function PageLoader() {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
@@ -25,27 +18,24 @@ function PageLoader() {
   );
 }
 
-/** Wrap lazy component in Suspense */
-function withSuspense(Component: React.LazyExoticComponent<React.ComponentType>) {
-  return (
-    <Suspense fallback={<PageLoader />}>
-      <Component />
-    </Suspense>
-  );
-}
-
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: withSuspense(HomePage) },
-      { path: 'about', element: withSuspense(AboutPage) },
-      { path: 'projects', element: withSuspense(ProjectsPage) },
-      { path: 'experience', element: withSuspense(ExperiencePage) },
-      { path: 'skills', element: withSuspense(SkillsPage) },
-      { path: 'contact', element: withSuspense(ContactPage) },
-      { path: '*', element: withSuspense(NotFoundPage) },
+      {
+        index: true,
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <LandingPage />
+          </Suspense>
+        ),
+      },
+      { path: 'about', element: <ScrollToSectionRedirect sectionId="about" /> },
+      { path: 'projects', element: <ScrollToSectionRedirect sectionId="projects" /> },
+      { path: 'experience', element: <ScrollToSectionRedirect sectionId="experience" /> },
+      { path: 'contact', element: <ScrollToSectionRedirect sectionId="contact" /> },
+      { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
 ]);

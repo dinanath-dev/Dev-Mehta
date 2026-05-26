@@ -53,6 +53,7 @@ export type SkillCategory =
 export interface Experience {
   id: string;
   company: string;
+  location?: string;
   role: string;
   duration: string;
   startDate: string;
@@ -69,6 +70,14 @@ export interface Education {
   degree: string;
   duration: string;
   description?: string;
+}
+
+/** Certificate / credential */
+export interface Certificate {
+  id: string;
+  title: string;
+  issuer: string;
+  year?: string;
 }
 
 /** Contact form values */

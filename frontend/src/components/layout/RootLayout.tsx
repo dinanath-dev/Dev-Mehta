@@ -7,19 +7,15 @@ import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { ScrollProgress } from './ScrollProgress';
 import { BackToTop } from './BackToTop';
-import { ParticlesBackground } from '@/components/animations';
-import { useScrollToTop } from '@/hooks';
-
+import { SiteBackground } from '@/components/animations/SiteBackground';
 export function RootLayout() {
-  useScrollToTop();
-
   return (
     <div className="relative flex min-h-screen flex-col">
-      <ParticlesBackground />
+      <SiteBackground />
       <ScrollProgress />
       <Navbar />
 
-      <main className="flex-1 pt-20">
+      <main className="relative z-10 flex-1 pt-20">
         <Outlet />
       </main>
 

@@ -1,21 +1,29 @@
 /* ============================================
- * Projects page — filterable grid
+ * Projects page — bento grid, filter morph, 3D cards
  * ============================================ */
 
 import { useState, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { PageTransition, StaggerContainer } from '@/components/animations';
 import { staggerItem } from '@/components/animations/variants';
 import { SectionWrapper } from '@/components/layout';
-import { ProjectCard } from '@/components/common';
+import { ProjectCard, FilterTabs } from '@/components/common';
 import { projects } from '@/constants/mockData';
-import { cn } from '@/utils';
 
-const categories = ['all', 'fullstack', 'frontend', 'backend', 'ai', 'devops'];
+const categories = [
+  { key: 'all', label: 'All' },
+  { key: 'fullstack', label: 'Full Stack' },
+  { key: 'frontend', label: 'Frontend' },
+  { key: 'backend', label: 'Backend' },
+  { key: 'ai', label: 'AI / ML' },
+  { key: 'devops', label: 'DevOps' },
+] as const;
+
+type ProjectCategory = (typeof categories)[number]['key'];
 
 export default function ProjectsPage() {
-  const [active, setActive] = useState('all');
+  const [active, setActive] = useState<ProjectCategory>('all');
 
   const filtered = useMemo(
     () =>
@@ -25,54 +33,82 @@ export default function ProjectsPage() {
     [active],
   );
 
+  const showFeaturedLayout = active === 'all' && filtered.some((p) => p.featured);
+
   return (
     <PageTransition>
       <Helmet>
         <title>Projects | Dev Mehta</title>
-        <meta name="description" content="Explore my portfolio of projects spanning full-stack, frontend, backend, AI, and DevOps." />
+        <meta
+          name="description"
+          content="Explore my portfolio of projects spanning full-stack, frontend, backend, AI, and DevOps."
+        />
       </Helmet>
 
       <SectionWrapper
         title="My Projects"
-        subtitle="Explore my work across different technologies and domains"
+        subtitle="Production-grade builds — from APIs and dashboards to AI-powered products"
+        accentWord="Projects"
       >
-        {/* Filter tabs */}
-        <div className="mb-10 flex flex-wrap justify-center gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
-              className={cn(
-                'rounded-full px-5 py-2 text-sm font-medium capitalize transition-all',
-                active === cat
-                  ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/25'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700',
-              )}
-            >
-              {cat}
-            </button>
-          ))}
+        <div className="mb-12 flex justify-center">
+          <FilterTabs
+            tabs={[...categories]}
+            active={active}
+            onChange={setActive}
+          />
         </div>
 
-        {/* Grid */}
-        <StaggerContainer className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((project) => (
-            <motion.div
-              key={project.id}
-              variants={staggerItem}
-              layout
-              layoutId={project.id}
+        <AnimatePresence mode="wait">
+          {filtered.length === 0 ? (
+            <motion.p
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="py-16 text-center text-zinc-500 dark:text-zinc-400"
             >
-              <ProjectCard project={project} />
+              No projects in this category yet — check back soon.
+            </motion.p>
+          ) : (
+            <motion.div
+              key={active}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <StaggerContainer
+                className={
+                  showFeaturedLayout
+                    ? 'grid gap-6 md:grid-cols-2 lg:grid-cols-3 [perspective:1200px]'
+                    : 'grid gap-6 md:grid-cols-2 lg:grid-cols-3 [perspective:1200px]'
+                }
+              >
+                {filtered.map((project, i) => (
+                  <motion.div
+                    key={project.id}
+                    variants={staggerItem}
+                    layout
+                    className={
+                      showFeaturedLayout &&
+                      project.featured &&
+                      i === 0
+                        ? 'md:col-span-2'
+                        : undefined
+                    }
+                  >
+                    <ProjectCard
+                      project={project}
+                      featured={
+                        showFeaturedLayout && project.featured && i === 0
+                      }
+                    />
+                  </motion.div>
+                ))}
+              </StaggerContainer>
             </motion.div>
-          ))}
-        </StaggerContainer>
-
-        {filtered.length === 0 && (
-          <p className="mt-12 text-center text-slate-500 dark:text-slate-400">
-            No projects found in this category yet.
-          </p>
-        )}
+          )}
+        </AnimatePresence>
       </SectionWrapper>
     </PageTransition>
   );
