@@ -1,13 +1,11 @@
 node_modules
 dist
 
-# Environment (never commit secrets)
+# Environment (never commit secrets) — single file at repo root
 .env
 .env.*
 !.env.example
 .env.local
-frontend/.env
-frontend/.env.local
 *.log
 .DS_Store
 frontend/dist

@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 export default defineConfig({
+  // Load VITE_* from repo root .env (single env file for FE + API)
+  envDir: path.resolve(__dirname, '..'),
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
