@@ -1,0 +1,14 @@
+node_modules
+dist
+
+# Environment (never commit secrets)
+.env
+.env.*
+!.env.example
+.env.local
+frontend/.env
+frontend/.env.local
+*.log
+.DS_Store
+frontend/dist
+.vercel
