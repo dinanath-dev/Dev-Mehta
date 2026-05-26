@@ -1,10 +1,16 @@
 /* ============================================
- * Vercel serverless — Express API
+ * Vercel serverless — Express API (ESM)
+ * Dynamic import avoids CJS require() of server/*.js on Vercel
  * ============================================ */
 
 import serverless from 'serverless-http';
-import { createApp } from '../server/app.js';
 
-const app = createApp();
+let handler;
 
-export default serverless(app);
+export default async function apiHandler(req, res) {
+  if (!handler) {
+    const { createApp } = await import('../server/app.js');
+    handler = serverless(createApp());
+  }
+  return handler(req, res);
+}

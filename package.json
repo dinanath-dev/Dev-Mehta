@@ -2,6 +2,10 @@
   "name": "devmehta-portfolio",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "workspaces": [
     "frontend",
     "server"
@@ -16,6 +20,11 @@
     "concurrently": "^9.1.2"
   },
   "dependencies": {
-    "serverless-http": "^3.2.0"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "nodemailer": "^6.10.0",
+    "serverless-http": "^3.2.0",
+    "zod": "^3.24.2"
   }
 }
