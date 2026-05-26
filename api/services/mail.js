@@ -12,7 +12,7 @@ function getTransporter() {
 
   if (!host || !user || !pass) {
     throw new Error(
-      'SMTP not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS in .env',
+      'SMTP not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS in Vercel env vars',
     );
   }
 
@@ -21,16 +21,19 @@ function getTransporter() {
     port,
     secure: port === 465,
     auth: { user, pass },
+    pool: false,
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 10_000,
   });
 }
 
 export async function sendContactMail({ name, email, message }) {
   const to = process.env.CONTACT_TO ?? process.env.SMTP_USER;
   const from = process.env.SMTP_FROM ?? process.env.SMTP_USER;
-
   const transporter = getTransporter();
 
-  await transporter.sendMail({
+  const sendPromise = transporter.sendMail({
     from: `"Dev Mehta Portfolio" <${from}>`,
     to,
     replyTo: email,
@@ -50,6 +53,17 @@ export async function sendContactMail({ name, email, message }) {
       <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
     `,
   });
+
+  const timeoutMs = 12_000;
+  await Promise.race([
+    sendPromise,
+    new Promise((_, reject) => {
+      setTimeout(
+        () => reject(new Error('Email send timed out. Use SMTP_PORT=465 and a Gmail App Password.')),
+        timeoutMs,
+      );
+    }),
+  ]);
 }
 
 function escapeHtml(str) {
